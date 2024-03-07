@@ -10,7 +10,7 @@ api.interceptors.response.use(
   },
   (error) => {
     if(error.response.status === 401) {
-      window.location.pathname !== '/login' && window.location.replace('/login');
+      localStorage.removeItem('token');
     }
     return Promise.reject(error);
   }

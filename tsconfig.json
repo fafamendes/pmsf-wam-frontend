@@ -27,8 +27,8 @@
       "@context/*": [
         "./src/shared/context/*"
       ],
-      "@layout/*": [
-        "./src/shared/layout/*"
+      "@layouts/*": [
+        "./src/shared/layouts/*"
       ],
       "@services/*": [
         "./src/shared/services/*",

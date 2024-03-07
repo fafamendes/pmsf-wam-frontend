@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '@context/UserContext';
 
 
 export const Login = () => {
@@ -17,8 +18,8 @@ export const Login = () => {
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
 
-
   const { setToken, token } = useTokenContext();
+  const { setUser } = useUserContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,14 +35,16 @@ export const Login = () => {
     if (username && password) {
       const response = await login(username, password);
       const token = response?.token;
+      const user = response?.user;
       if (!token) {
         setLoginError(response.message);
         return;
       };
       setToken(token);
+      setUser(user);
     }
 
-  }, [setToken]);
+  }, [setToken, setUser]);
 
   const removeError = () => {
     setLoginError(null);

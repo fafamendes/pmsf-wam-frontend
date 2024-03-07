@@ -27,6 +27,7 @@ export const TokenProvider: React.FC<ITokenProviderProps> = ({ children }) => {
   const logout = () => {
     setToken(null);
     localStorage.removeItem('token');
+    window.location.reload();
   }
 
   const value = { token, setToken, logout };
