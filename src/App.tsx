@@ -7,6 +7,7 @@ import { useTokenContext } from '@context/index';
 import { useUserContext } from '@context/UserContext';
 import { AdminRoutes } from '@routes/AdminRoutes';
 import { UserRoutes } from '@routes/UserRoutes';
+import { Header } from '@layouts/header/Header';
 
 function App() {
   const { token } = useTokenContext();
@@ -18,11 +19,15 @@ function App() {
   }, [navigate, token])
 
   return (
-    user?.role === 'ADMIN' ? (
-      <AdminRoutes />
-    ) : (
-      <UserRoutes />
-    )
+    <>
+      <Header />
+      {
+        user?.role === 'ADMIN' ? (
+          <AdminRoutes />
+        ) : (
+          <UserRoutes />
+        )}
+    </>
   );
 }
 
