@@ -34,8 +34,8 @@ export const SearchUsers = () => {
         return;
       }
 
-      const usersByNameList: UsersRequest = await usersByName(search, 10, token!);
-      const usersByUsernameList: UsersRequest = await usersByUsername(search, 10, token!);
+      const usersByNameList: UsersRequest = await usersByName(search, 15, token!);
+      const usersByUsernameList: UsersRequest = await usersByUsername(search, 15, token!);
 
       setUsers([...usersByNameList.users, ...usersByUsernameList.users]);
     }

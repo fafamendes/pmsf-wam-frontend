@@ -35,10 +35,10 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user 
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Editar Usuário
+              Editar {user.name}
             </DialogTitle>
             <DialogDescription>
-              Edite os dados do usuário.
+              Matrícula: {user.username}
             </DialogDescription>
           </DialogHeader>
           <form className="flex flex-col gap-4 items-center" action="
