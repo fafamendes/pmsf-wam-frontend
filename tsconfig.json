@@ -47,7 +47,7 @@
       ]
     },
     "rootDirs": [
-      "src"
+      "./src"
     ]
   },
   "include": [
