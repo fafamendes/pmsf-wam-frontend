@@ -26,12 +26,13 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "web-vitals": "^2.1.4",
+    "craco": "^0.0.3",
     "zod": "^3.22.4"
   },
   "scripts": {
     "start": "craco start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -54,7 +55,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "craco": "^0.0.3",
     "tailwindcss": "^3.4.1"
   }
 }
