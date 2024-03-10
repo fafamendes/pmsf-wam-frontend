@@ -7,7 +7,7 @@ type User = {
   status: boolean
 }
 
-type UsersRequest = {
+type UsersResponse = {
   users: User[]
   message?: string
   error?: string

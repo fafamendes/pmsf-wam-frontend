@@ -2,17 +2,20 @@
 import { Input } from "@/components/ui/input"
 import { useCallback, useState, useRef } from "react"
 
-import { usersByUsername } from "@services/usersByUsername";
-import { usersByName } from "@services/usersByName";
+import { searchByString } from "@services/searchByString";
 import { useTokenContext } from "@context/TokenContext";
 import { Separator } from "@/components/ui/separator";
 import { UserEditDialog } from "@components/user-edit-dialog/UserEditDialog";
+
+import { SearchSkeleton } from './SearchSkeleton';
+import { AxiosError } from "axios";
 
 export const SearchUsers = () => {
 
   const [users, setUsers] = useState<User[]>([]);
   const { token } = useTokenContext();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClearInput = () => {
     if (inputRef.current) {
@@ -34,13 +37,19 @@ export const SearchUsers = () => {
         return;
       }
 
-      const usersByNameList: UsersRequest = await usersByName(search, 15, token!);
-      const usersByUsernameList: UsersRequest = await usersByUsername(search, 15, token!);
-
-      setUsers([...usersByNameList.users, ...usersByUsernameList.users]);
+      setIsLoading(true);
+      searchByString(search, 10, token!).then((response: UsersResponse) => {
+        setUsers(response.users);
+        setIsLoading(false);
+      }).catch((e) => {
+        const error = e as AxiosError;
+        setIsLoading(false);
+        console.log(error);
+      })
     }
+
     fetchUsers();
-  }, [token])
+  }, [token]);
 
   return (
     <div className="flex flex-col gap-[0.8px] mt-10 align-center">
@@ -54,24 +63,32 @@ export const SearchUsers = () => {
           }
         </div>
       </form>
-      {users.length > 0 && (
-        <div className="mt-5 text-white bg-[#265d53] rounded-[8px] border p-2 lg:min-w-[600px]">
-          <ul>
-            {users.map((user, index) => (
-              <div>
-                <UserEditDialog user={user}>
-                  <div className="flex justify-between m-1 p-1 gap-8 cursor-pointer w-[100%]" key={`user-${user.id}-${index}`}>
-                    <span color="white">{user.username}</span>
-                    <span>{user.name}</span>
-                    <span>Status: {user.status ? 'Ativo' : 'Inativo'}</span>
-                  </div>
-                </UserEditDialog>
-                <Separator />
-              </div>))
-            }
-          </ul>
-        </div>
-      )}
+      {
+        ((inputRef.current?.value.length! > 0 && users.length > 0) || isLoading) ? (
+          <div className="mt-5 text-white bg-[#265d53] rounded-[8px] border p-2 lg:min-w-[600px]">
+            <ul>
+              {
+                isLoading ? <SearchSkeleton count={5} /> : users.map((user, index) => (
+                  <li key={`user-${user.id}-${index}`}>
+                    <UserEditDialog user={user}>
+                      <div className="flex justify-between m-1 p-1 gap-8 cursor-pointer w-[100%]">
+                        <span color="white">{user.username}</span>
+                        <span>{user.name}</span>
+                        <span>Status: {user.status ? 'Ativo' : 'Inativo'}</span>
+                      </div>
+                    </UserEditDialog>
+                    <Separator />
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        ) :
+          (inputRef.current?.value.length! > 0 && users.length === 0 && !isLoading) &&
+          <div>
+            Nenhum usuário encotrado
+          </div>
+      }
     </div>
   )
 }
