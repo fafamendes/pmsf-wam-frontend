@@ -16,6 +16,7 @@ export const SearchUsers = () => {
   const { token } = useTokenContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const handleClearInput = () => {
     if (inputRef.current) {
@@ -34,6 +35,7 @@ export const SearchUsers = () => {
 
       if (!search) {
         setUsers([]);
+        setIsLoading(false);
         return;
       }
 
@@ -51,11 +53,31 @@ export const SearchUsers = () => {
     fetchUsers();
   }, [token]);
 
+  const handleLazeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    setIsLoading(true);
+    if (!inputRef.current?.value) {
+      setUsers([]);
+      setIsLoading(false);
+      return;
+    }
+
+    let timeout = setTimeout(() => {
+      handleSearch(event)
+    }, 1000)
+
+    setTimeoutId(timeout);
+
+  }, [handleSearch, timeoutId])
+
   return (
     <div className="flex flex-col gap-[0.8px] mt-10 align-center">
       <form action="" className="flex justify-center relative">
         <div className="flex items-center relative">
-          <Input ref={inputRef} className="text-center italic w-[400px] padding-x-4 uppercase" onChange={handleSearch} placeholder="Digite a matrícula ou nome do funcionário" />
+          <Input ref={inputRef} className="text-center italic w-[400px] padding-x-4 uppercase" onChange={handleLazeSearch} placeholder="Digite a matrícula ou nome do funcionário" />
           {
             inputRef.current?.value && (<span onClick={handleClearInput} className="absolute p-1 right-2 material-symbols-outlined rounded-full hover:bg-[#CCCCCC]">
               close
