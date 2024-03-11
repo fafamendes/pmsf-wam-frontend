@@ -25,7 +25,9 @@ export const Header = () => {
             <NavigationMenuContent className='w-[100%]'>
               <ul className='gap-2 flex flex-col min-w-[120px]'>
                 <li>
-                  <NavigationMenuLink onClick={() => logout()} className={`${navigationMenuTriggerStyle()} w-[100%]`}>Sair</NavigationMenuLink>
+                  <NavigationMenuLink onClick={() => logout()}
+                    style={{width: '100%'}}
+                    className={`${navigationMenuTriggerStyle()} cursor-pointer`}>Sair</NavigationMenuLink>
                 </li>
               </ul>
             </NavigationMenuContent>

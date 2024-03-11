@@ -25,14 +25,8 @@ export const SearchUsers = () => {
     }
   }
 
-  const handleSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-
+  const handleSearch = useCallback((search: string) => {
     const fetchUsers = async () => {
-
-      const search = event.target.value.replaceAll(/[^\w\s]/gi, '');
-      event.target.value = search;
-
       if (!search) {
         setUsers([]);
         setIsLoading(false);
@@ -53,10 +47,14 @@ export const SearchUsers = () => {
     fetchUsers();
   }, [token]);
 
-  const handleLazeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLazySearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
+
+    const search = event.target.value.replaceAll(/[^\w\s]/gi, '');
+    event.target.value = search;
+
 
     setIsLoading(true);
     if (!inputRef.current?.value) {
@@ -66,7 +64,7 @@ export const SearchUsers = () => {
     }
 
     let timeout = setTimeout(() => {
-      handleSearch(event)
+      handleSearch(search);
     }, 1000)
 
     setTimeoutId(timeout);
@@ -74,14 +72,19 @@ export const SearchUsers = () => {
   }, [handleSearch, timeoutId])
 
   return (
-    <div className="flex flex-col gap-[0.8px] mt-10 align-center">
+    <div className="flex flex-col gap-[0.8px] mt-10 max-w-[600px] w-[100%]">
       <form action="" className="flex justify-center relative">
-        <div className="flex items-center relative">
-          <Input ref={inputRef} className="text-center italic w-[400px] padding-x-4 uppercase" onChange={handleLazeSearch} placeholder="Digite a matrícula ou nome do funcionário" />
+        <div className="flex items-center relative align-center w-[100%] sm:w-[100%] lg:w-[500px] max-w-[600px] justify-center">
+          <Input ref={inputRef}
+            className="text-center italic w-[90%] padding-x-4 uppercase"
+            onChange={handleLazySearch}
+            placeholder="Digite a matrícula ou nome do funcionário" />
           {
-            inputRef.current?.value && (<span onClick={handleClearInput} className="absolute p-1 right-2 material-symbols-outlined rounded-full hover:bg-[#CCCCCC]">
-              close
-            </span>)
+            inputRef.current?.value && (
+              <span onClick={handleClearInput} className="absolute p-1 right-4 material-symbols-outlined cursor-pointer rounded-full hover:bg-[#CCCCCC]">
+                close
+              </span>
+            )
           }
         </div>
       </form>
@@ -92,7 +95,11 @@ export const SearchUsers = () => {
               {
                 isLoading ? <SearchSkeleton count={5} /> : users.map((user, index) => (
                   <li key={`user-${user.id}-${index}`}>
-                    <UserEditDialog user={user}>
+                    <UserEditDialog
+                      onUpdate={() => handleSearch(inputRef.current?.value!)}
+                      beforeUpdate={() => setIsLoading(true)}
+                      user={user}
+                    >
                       <div className="flex justify-between m-1 p-1 gap-8 cursor-pointer w-[100%]">
                         <span color="white">{user.username}</span>
                         <span>{user.name}</span>
@@ -107,8 +114,10 @@ export const SearchUsers = () => {
           </div>
         ) :
           (inputRef.current?.value.length! > 0 && users.length === 0 && !isLoading) &&
-          <div>
-            Nenhum usuário encotrado
+          <div className="flex justify-center p-4">
+            <span className="text-[#EA0000]">
+              Nenhum usuário encotrado
+            </span>
           </div>
       }
     </div>
