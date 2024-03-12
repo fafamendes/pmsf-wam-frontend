@@ -16,6 +16,7 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+
     extend: {
       screens: {
         "xs": "375px",
@@ -55,6 +56,18 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        pmsf: {
+          DEFAULT: "#184547",
+          100: '#000000',
+          200: '#000000',
+          300: '#000000',
+          400: '#000000',
+          500: '#000000',
+          600: '#184547',
+          700: '#000000',
+          800: '#000000',
+          900: '#000000',
+        }
       },
       borderRadius: {
         lg: "var(--radius)",

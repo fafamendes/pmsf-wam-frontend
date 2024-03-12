@@ -107,7 +107,11 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
             <Input ref={inputNameRef} className="" placeholder="Nome" defaultValue={user.name} />
             <Input ref={inputUsernameRef} className="" placeholder="Matrícula" defaultValue={user.username} />
             <div className="flex gap-4 items-center w-full">
-              <Switch ref={switchRef} defaultChecked={user.status} onCheckedChange={handleChangeSwitch} id={'user-status'} />
+              <Switch ref={switchRef}
+                className="data-[state=checked]:bg-[#184547]"
+                defaultChecked={user.status}
+                onCheckedChange={handleChangeSwitch}
+                id={'user-status'} />
               <Label htmlFor={'user-status'}>{switchValue ? 'Ativo' : 'Inativo'}</Label>
             </div>
             <DialogClose asChild>

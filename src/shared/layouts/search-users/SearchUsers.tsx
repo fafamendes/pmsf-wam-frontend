@@ -81,7 +81,7 @@ export const SearchUsers = () => {
             placeholder="Digite a matrícula ou nome do funcionário" />
           {
             inputRef.current?.value && (
-              <span onClick={handleClearInput} className="absolute p-1 right-4 material-symbols-outlined cursor-pointer rounded-full hover:bg-[#CCCCCC]">
+              <span onClick={handleClearInput} className="absolute p-1 right-6 md:right-8 material-symbols-outlined cursor-pointer rounded-full hover:bg-[#CCCCCC]">
                 close
               </span>
             )
@@ -90,7 +90,7 @@ export const SearchUsers = () => {
       </form>
       {
         ((inputRef.current?.value.length! > 0 && users.length > 0) || isLoading) ? (
-          <div className="mt-5 text-white bg-[#184547] rounded-[8px] border p-2 lg:min-w-[600px]">
+          <div className="mt-5 text-white bg-pmsf-600 rounded-[8px] border p-2 lg:min-w-[600px]">
             <ul>
               {
                 isLoading ? <SearchSkeleton count={5} /> : users.map((user, index) => (
@@ -101,7 +101,7 @@ export const SearchUsers = () => {
                       user={user}
                     >
                       <div className="flex justify-between m-1 p-1 gap-8 cursor-pointer w-[100%]">
-                        <span color="white">{user.username}</span>
+                        <span>{user.username}</span>
                         <span>{user.name}</span>
                         <span>Status: {user.status ? 'Ativo' : 'Inativo'}</span>
                       </div>
