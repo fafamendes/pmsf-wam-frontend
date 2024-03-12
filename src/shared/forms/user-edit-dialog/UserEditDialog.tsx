@@ -1,3 +1,4 @@
+import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,14 +9,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { useTokenContext } from "@context/TokenContext";
 import { updateUser } from "@services/updateUser";
-import { useCallback, useRef, useState } from "react";
 
-import { toast } from "sonner";
 
 export interface IUserEditDialogProps {
   children: React.ReactNode;
@@ -28,15 +38,13 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
 
   const { token } = useTokenContext();
 
-  const [switchValue, setSwitchValue] = useState<boolean>(user.status);
+
   const inputNameRef = useRef<HTMLInputElement>(null);
   const inputUsernameRef = useRef<HTMLInputElement>(null);
   const switchRef = useRef<HTMLButtonElement>(null);
   const [hasEdited, setHasEdited] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string>(user.role);
 
-  const handleChangeSwitch = useCallback((checked: boolean) => {
-    setSwitchValue(checked)
-  }, [])
 
   const handleSaveUser = useCallback((event: React.FormEvent) => {
     let checked = switchRef.current?.getAttribute("aria-checked") === "true" ? true : false;
@@ -77,16 +85,18 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
     event.preventDefault();
 
     let checked = switchRef.current?.getAttribute("aria-checked") === "true" ? true : false;
-
+    console.log(userRole)
     if (inputNameRef.current?.value === user.name &&
       inputUsernameRef.current?.value === user.username &&
-      checked === user.status) {
+      checked === user.status &&
+      userRole === user.role
+    ) {
       setHasEdited(false);
       return;
     } else {
       setHasEdited(true);
     }
-  }, [user])
+  }, [user, userRole]);
 
   return (
     <>
@@ -106,13 +116,27 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
           <form className="flex flex-col gap-4 items-center" onChange={handleChangeForm} onSubmit={handleSaveUser}>
             <Input ref={inputNameRef} className="" placeholder="Nome" defaultValue={user.name} />
             <Input ref={inputUsernameRef} className="" placeholder="Matrícula" defaultValue={user.username} />
+            <div className="w-full flex justify-start">
+              <Select onValueChange={(value) => setUserRole(value)} defaultValue={user.role} >
+                <SelectTrigger>
+                  <SelectValue placeholder="Tipo de usuário" />
+                </SelectTrigger>
+                <SelectContent >
+                  <SelectGroup>
+                    <SelectLabel>Selecione o tipo de usuário</SelectLabel>
+                    <SelectItem value="ADMIN">Administrador</SelectItem>
+                    <SelectItem value="USER">Usuário</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="flex gap-4 items-center w-full">
               <Switch ref={switchRef}
-                className="data-[state=checked]:bg-[#184547]"
+                className="data-[state=checked]:bg-pmsf"
                 defaultChecked={user.status}
-                onCheckedChange={handleChangeSwitch}
+
                 id={'user-status'} />
-              <Label htmlFor={'user-status'}>{switchValue ? 'Ativo' : 'Inativo'}</Label>
+              <Label htmlFor={'user-status'}>{switchRef.current?.getAttribute("aria-checked") === "true" ? 'Ativo' : 'Inativo'}</Label>
             </div>
             <DialogClose asChild>
               <Button type="submit" disabled={!hasEdited} className="bg-green-700 w-auto">Salvar</Button>

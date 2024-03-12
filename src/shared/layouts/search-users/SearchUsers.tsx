@@ -5,7 +5,7 @@ import { useCallback, useState, useRef } from "react"
 import { searchByString } from "@services/searchByString";
 import { useTokenContext } from "@context/TokenContext";
 import { Separator } from "@/components/ui/separator";
-import { UserEditDialog } from "@components/user-edit-dialog/UserEditDialog";
+import { UserEditDialog } from "@/shared/forms/user-edit-dialog/UserEditDialog";
 
 import { SearchSkeleton } from './SearchSkeleton';
 import { AxiosError } from "axios";
