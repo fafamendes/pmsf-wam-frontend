@@ -52,15 +52,16 @@ export const Login = () => {
   }
 
   return (
-    <div className='flex items-center justify-center h-screen w-screen bg-[#184742]'>
+    <div className='flex flex-col items-center h-screen w-screen bg-[#184742] select-none gap-4 pt-[10vh]'>
+      <img className='uxs:w-[100px] sm:w-[120px] md:w-[180px]' src="/simoes-filho.png" alt="PMSF" />
       <Card className='w-[80%] lg:w-[500px] sm:w-[350px] md:w-[400px]'>
         <CardHeader>
           <CardTitle>Login</CardTitle>
         </CardHeader>
         <CardContent >
-          <form onSubmit={handleLogin} className='flex flex-col gap-6'>
+          <form onSubmit={handleLogin} className='flex flex-col gap-6 items-center'>
             <Input onKeyDown={removeError} ref={usernameInputRef} required placeholder='Matrícula' />
-            <div className='relative'>
+            <div className='relative w-full'>
               <Input onKeyDown={removeError} ref={passwordInputRef} required type={showPassword ? 'text' : 'password'} placeholder='Senha' />
               <span onClick={() => setShowPassword(!showPassword)}
                 className="material-symbols-outlined absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-[#333]">
@@ -68,7 +69,7 @@ export const Login = () => {
               </span>
             </div>
             <p className='text-red-500 text-center'>{loginError}</p>
-            <Button variant={'default'} className='bg-[#2c6c5c] hover:bg-[#2c6c5c]/90'>Entrar</Button>
+            <Button variant={'default'} className='bg-[#2c6c5c] hover:bg-[#2c6c5c]/90 w-[auto]'>Entrar</Button>
           </form>
         </CardContent>
       </Card>
