@@ -52,7 +52,7 @@ export const Login = () => {
   }
 
   return (
-    <div className='flex flex-col items-center h-screen w-screen bg-[#184742] select-none gap-4 pt-[10vh]'>
+    <div className='flex flex-col items-center h-screen w-screen bg-[#184547] select-none gap-4 pt-[10vh]'>
       <img className='uxs:w-[100px] sm:w-[120px] md:w-[180px]' src="/simoes-filho.png" alt="PMSF" />
       <Card className='w-[80%] lg:w-[500px] sm:w-[350px] md:w-[400px]'>
         <CardHeader>

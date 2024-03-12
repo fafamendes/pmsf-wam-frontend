@@ -90,7 +90,7 @@ export const SearchUsers = () => {
       </form>
       {
         ((inputRef.current?.value.length! > 0 && users.length > 0) || isLoading) ? (
-          <div className="mt-5 text-white bg-[#265d53] rounded-[8px] border p-2 lg:min-w-[600px]">
+          <div className="mt-5 text-white bg-[#184547] rounded-[8px] border p-2 lg:min-w-[600px]">
             <ul>
               {
                 isLoading ? <SearchSkeleton count={5} /> : users.map((user, index) => (

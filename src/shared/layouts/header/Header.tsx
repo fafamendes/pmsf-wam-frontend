@@ -17,7 +17,7 @@ export const Header = () => {
   const { logout } = useTokenContext();
 
   return (
-    <div className='w-full justify-end flex bg-[#2c6c5c] p-4'>
+    <div className='w-full justify-end flex bg-[#184547] p-4'>
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem >
