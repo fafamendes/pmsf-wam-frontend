@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -39,34 +39,34 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
   const { token } = useTokenContext();
 
 
-  const inputNameRef = useRef<HTMLInputElement>(null);
-  const inputUsernameRef = useRef<HTMLInputElement>(null);
-  const switchRef = useRef<HTMLButtonElement>(null);
   const [hasEdited, setHasEdited] = useState<boolean>(false);
-  const [userRole, setUserRole] = useState<string>(user.role);
 
+  const [name, setName] = useState<string>(user.name);
+  const [username, setUsername] = useState<string>(user.username);
+  const [userRole, setUserRole] = useState<string>(user.role);
+  const [status, setStatus] = useState<boolean>(user.status);
 
   const handleSaveUser = useCallback((event: React.FormEvent) => {
-    let checked = switchRef.current?.getAttribute("aria-checked") === "true" ? true : false;
+
     event.preventDefault();
-    if (inputNameRef.current?.value === user.name &&
-      inputUsernameRef.current?.value === user.username &&
-      checked === user.status) {
+    if (!hasEdited) {
       return;
     } else {
-
       beforeUpdate!();
       updateUser({
         id: user.id,
-        name: inputNameRef.current?.value!,
-        username: inputUsernameRef.current?.value!,
-        status: checked!,
+        name,
+        username,
+        role: userRole,
+        status,
       }, token!)
         .then((response) => {
           if (response.success) {
             toast.success("Usuário editado com sucesso!", {
               description: `O usuário ${user.name} foi editado com sucesso!`,
             })
+          } else {
+            console.log(response);
           }
         }).catch((e) => {
           toast.error("Ocorreu um erro ao editar o usuário!", {
@@ -76,27 +76,22 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
         .finally(() => {
           onUpdate!();
         })
-
     }
+  }, [user, name, username, status, userRole, onUpdate, beforeUpdate, hasEdited, token]);
 
-  }, [user, token, onUpdate, beforeUpdate])
-
-  const handleChangeForm = useCallback((event: React.ChangeEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    let checked = switchRef.current?.getAttribute("aria-checked") === "true" ? true : false;
-    console.log(userRole)
-    if (inputNameRef.current?.value === user.name &&
-      inputUsernameRef.current?.value === user.username &&
-      checked === user.status &&
-      userRole === user.role
+  useEffect(() => {
+    if (
+      name === user.name &&
+      username === user.username &&
+      userRole === user.role &&
+      status === user.status
     ) {
       setHasEdited(false);
       return;
     } else {
       setHasEdited(true);
     }
-  }, [user, userRole]);
+  }, [user, userRole, username, name, status]);
 
   return (
     <>
@@ -113,11 +108,11 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
               Matrícula: {user.username}
             </DialogDescription>
           </DialogHeader>
-          <form className="flex flex-col gap-4 items-center" onChange={handleChangeForm} onSubmit={handleSaveUser}>
-            <Input ref={inputNameRef} className="" placeholder="Nome" defaultValue={user.name} />
-            <Input ref={inputUsernameRef} className="" placeholder="Matrícula" defaultValue={user.username} />
+          <form className="flex flex-col gap-4 items-center" onSubmit={handleSaveUser}>
+            <Input className="" onChange={(e) => { setName(e.target.value) }} placeholder="Nome" defaultValue={user.name} />
+            <Input className="" onChange={(e) => { setUsername(e.target.value) }} placeholder="Matrícula" defaultValue={user.username} />
             <div className="w-full flex justify-start">
-              <Select onValueChange={(value) => setUserRole(value)} defaultValue={user.role} >
+              <Select onValueChange={setUserRole} defaultValue={user.role} >
                 <SelectTrigger>
                   <SelectValue placeholder="Tipo de usuário" />
                 </SelectTrigger>
@@ -131,12 +126,12 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
               </Select>
             </div>
             <div className="flex gap-4 items-center w-full">
-              <Switch ref={switchRef}
+              <Switch
                 className="data-[state=checked]:bg-pmsf"
                 defaultChecked={user.status}
-
+                onCheckedChange={setStatus}
                 id={'user-status'} />
-              <Label htmlFor={'user-status'}>{switchRef.current?.getAttribute("aria-checked") === "true" ? 'Ativo' : 'Inativo'}</Label>
+              <Label htmlFor={'user-status'}>{ }</Label>
             </div>
             <DialogClose asChild>
               <Button type="submit" disabled={!hasEdited} className="bg-green-700 w-auto">Salvar</Button>
