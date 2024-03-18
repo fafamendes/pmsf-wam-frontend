@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '@context/UserContext';
+import { useMutation } from '@tanstack/react-query';
 
 
 export const Login = () => {
@@ -23,29 +24,44 @@ export const Login = () => {
   const { setUser } = useUserContext();
   const navigate = useNavigate();
 
+  const { mutate } = useMutation({
+    mutationKey: ['login'],
+    mutationFn: async (data: { username: string; password: string }) => {
+      const response = await login(data.username, data.password);
+      return response;
+    },
+    onSuccess: (data) => {
+      if (data) {
+        setToken(data.token);
+        setUser(data.user);
+      } else {
+        setLoginError('Usuário ou senha inválidos');
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+      if (error instanceof Error) {
+        setLoginError(error.message);
+      }
+    }
+  })
+
   useEffect(() => {
     !!token && navigate('/');
   }, [token, navigate])
+
+
 
   const handleLogin = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const username = usernameInputRef.current?.value;
     const password = passwordInputRef.current?.value;
 
-
     if (username && password) {
-      const response = await login(username, password);
-      const token = response?.token;
-      const user = response?.user;
-      if (!token) {
-        setLoginError(response.message);
-        return;
-      };
-      setToken(token);
-      setUser(user);
+      mutate({ username, password });
     }
 
-  }, [setToken, setUser]);
+  }, [mutate]);
 
   const removeError = () => {
     setLoginError(null);
