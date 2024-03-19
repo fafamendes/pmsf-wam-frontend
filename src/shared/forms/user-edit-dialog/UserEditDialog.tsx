@@ -131,7 +131,7 @@ export const UserEditDialog: React.FC<IUserEditDialogProps> = ({ children, user,
                 defaultChecked={user.status}
                 onCheckedChange={setStatus}
                 id={'user-status'} />
-              <Label htmlFor={'user-status'}>{ }</Label>
+              <Label htmlFor={'user-status'}>{user.status ? 'Ativo' : 'Inativo'}</Label>
             </div>
             <DialogClose asChild>
               <Button type="submit" disabled={!hasEdited} className="bg-green-700 w-auto">Salvar</Button>

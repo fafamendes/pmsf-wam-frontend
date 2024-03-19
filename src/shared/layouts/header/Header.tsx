@@ -23,6 +23,7 @@ export const Header = () => {
         console.log('Novo usuário')
       },
       icon: 'person_add',
+      userType: 'ADMIN',
     },
     {
       label: 'Sair',
@@ -44,6 +45,7 @@ export const Header = () => {
 
                 {
                   menuItems.map((item, index) =>
+                    (item.userType === user?.role || !item.userType) &&
                     <li key={index} className='md:min-w-[160px]'>
                       <NavigationMenuLink key={index}
                         onClick={item.onClick}
